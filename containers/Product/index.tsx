@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { axiosInstance } from '../../helpers/axios';
 import { ApiResponse } from '../../utils/interfaces/api';
 import { ProducRowResponse, ProductResponse } from './interfaces';
-import { Button, Form, Input, Paragraph, Title, Wrapper } from '../../components/UI';
+import { Alert, Button, Form, Input, List, ListElement, Paragraph, Title, Wrapper } from '../../components/UI';
 
 const Product = () => {
     const [value, setValue] = useState<string>('');
@@ -17,6 +17,8 @@ const Product = () => {
         e.preventDefault();
 
         setLoading(true);
+        setError(null);
+        setStockList([]);
 
         try {
             const { data } = await axiosInstance.get<Omit<ApiResponse, 'data'> & { data: ProductResponse }>(
@@ -31,7 +33,6 @@ const Product = () => {
                 },
             );
 
-            setError(null);
             setStockList(data.data.rows);
             setLoading(false);
             setValue('');
@@ -40,7 +41,6 @@ const Product = () => {
             console.error(e);
             setError('Something went wrong. Please try again later.');
             setLoading(false);
-            setStockList([]);
         }
     };
 
@@ -52,8 +52,8 @@ const Product = () => {
 
             <Wrapper>
                 <Title>PRODUCT TITLE</Title>
-                <Title>XXXX RON</Title>
-                <Title>Product Description:</Title>
+                <Title as='h2'>XXXX RON</Title>
+                <Title as='h3'>Product Description:</Title>
 
                 <Paragraph>
                     It is a long established fact that a reader will be distracted by the readable content of a page
@@ -87,15 +87,17 @@ const Product = () => {
 
                 {loading ? <Paragraph>Loading...</Paragraph> : null}
 
-                {error ? <Paragraph>{error}</Paragraph> : null}
+                {error ? <Alert>{error}</Alert> : null}
 
-                <ul>
-                    {stockList.map((row, index) => (
-                        <li key={index}>
-                            {row.oras}: {row.magazin} - {row.adresa}
-                        </li>
-                    ))}
-                </ul>
+                <Wrapper>
+                    <List>
+                        {stockList.map((row, index) => (
+                            <ListElement key={index}>
+                                {row.oras}: {row.magazin} - {row.adresa}
+                            </ListElement>
+                        ))}
+                    </List>
+                </Wrapper>
             </Wrapper>
         </Wrapper>
     );

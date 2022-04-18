@@ -1,3 +1,4 @@
+import { darken } from 'polished';
 import styled from 'styled-components';
 
 export const Wrapper = styled.div<{
@@ -8,7 +9,6 @@ export const Wrapper = styled.div<{
 }>`
     display: ${(props) => props.display || 'block'};
     padding: ${(props) => props.padding ?? 16}px;
-    margin-bottom: 16px;
     min-width: 50%;
     align-items: ${(props) => props.alignItems || 'initial'};
     justify-content: ${(props) => props.justifyContent || 'initial'};
@@ -18,41 +18,49 @@ export const Wrapper = styled.div<{
     }
 `;
 
-export const Title = styled.h2``;
+export const Title = styled.h1`
+    margin-bottom: 16px;
+`;
 
-export const Paragraph = styled.p``;
+export const Paragraph = styled.p`
+    margin-bottom: 16px;
+`;
 
 export const Button = styled.button`
+    color: #fff;
     padding: 8px 16px;
-    border-radius: 8px;
-    border: 1px solid red;
-    background: transparent;
+    background: ${(props) => props.theme.colors.primary};
+    border-radius: ${(props) => props.theme.borderRadius};
+    border: 1px solid ${(props) => props.theme.colors.primary};
+    box-shadow: 0px 1px 2px ${(props) => props.theme.colors.primary};
 
     &:hover {
+        color: #fff;
         cursor: pointer;
         border: 1px solid transparent;
-        background: red;
-        color: white;
+        background: ${(props) => darken(0.1, props.theme.colors.primary)};
 
         &:disabled {
-            color: rgba(16, 16, 16, 0.3);
             cursor: not-allowed;
-            border: 1px solid gray;
             background: transparent;
+            color: ${(props) => props.theme.colors.disabled};
+            border: 1px solid ${(props) => props.theme.colors.disabled};
         }
     }
 
     &:disabled {
-        border: 1px solid gray;
         background: transparent;
+        color: ${(props) => props.theme.colors.disabled};
+        border: 1px solid ${(props) => props.theme.colors.disabled};
+        box-shadow: none;
     }
 `;
 
 export const Input = styled.input`
     padding: 8px 16px;
     margin-right: 16px;
-    border-radius: 8px;
-    border: 1px solid black;
+    border-radius: ${(props) => props.theme.borderRadius};
+    border: 1px solid ${(props) => props.theme.colors.primary};
 `;
 
 export const Form = styled.form`
@@ -63,4 +71,20 @@ export const Form = styled.form`
         margin: 0;
         margin-bottom: 16px;
     }
+`;
+
+export const Alert = styled.div((props) => ({
+    marginTop: '16px',
+    color: '#fff',
+    textAlign: 'center',
+    padding: '8px 16px',
+    background: props.theme.colors.error,
+    borderRadius: props.theme.borderRadius,
+    boxShadow: `0px 1px 2px ${props.theme.colors.error}`,
+}));
+
+export const List = styled.ul``;
+
+export const ListElement = styled.li`
+    margin-bottom: 8px;
 `;

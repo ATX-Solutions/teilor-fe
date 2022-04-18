@@ -4,39 +4,52 @@ import { useState } from 'react';
 import { axiosInstance } from '../../helpers/axios';
 import { ApiResponse } from '../../utils/interfaces/api';
 import { ProducRowResponse, ProductResponse } from './interfaces';
-import { Button, Input, Paragraph, Title, Wrapper } from '../../components/UI';
+import { Button, Form, Input, Paragraph, Title, Wrapper } from '../../components/UI';
 
 const Product = () => {
     const [value, setValue] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
     const [stockList, setStockList] = useState<ProducRowResponse[]>([]);
 
-    const fetchStock = async () => {
+    const fetchStock = async (e: any) => {
+        e.preventDefault();
+
         setLoading(true);
+
         try {
             const { data } = await axiosInstance.get<Omit<ApiResponse, 'data'> & { data: ProductResponse }>(
                 '/products/54270',
                 {
+                    params: {
+                        email,
+                    },
                     headers: {
                         Authorization: `Bearer ${value}`,
                     },
                 },
             );
 
+            setError(null);
             setStockList(data.data.rows);
-
             setLoading(false);
+            setValue('');
+            setEmail('');
         } catch (e) {
             console.error(e);
+            setError('Something went wrong. Please try again later.');
             setLoading(false);
+            setStockList([]);
         }
     };
 
     return (
         <Wrapper display='flex'>
-            <Wrapper as='section'>
+            <Wrapper as='section' display='flex' alignItems='flex-start' justifyContent='center'>
                 <Image width={500} height={500} alt='Placeholder' src='https://via.placeholder.com/500' />
             </Wrapper>
+
             <Wrapper>
                 <Title>PRODUCT TITLE</Title>
                 <Title>XXXX RON</Title>
@@ -52,13 +65,29 @@ const Product = () => {
                     (injected humour and the like).
                 </Paragraph>
 
-                <Input placeholder='Token' type='text' onChange={(e) => setValue(e.target.value)} />
+                <Wrapper padding={0}>
+                    <Form onSubmit={fetchStock}>
+                        <Input
+                            placeholder='Token'
+                            type='text'
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                        />
+                        <Input
+                            placeholder='Email'
+                            type='email'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <Button disabled={!value || !email} type='submit'>
+                            See product availability
+                        </Button>
+                    </Form>
+                </Wrapper>
 
-                <Button disabled={!value} onClick={fetchStock}>
-                    See stock
-                </Button>
+                {loading ? <Paragraph>Loading...</Paragraph> : null}
 
-                {loading ? <p>Loading...</p> : null}
+                {error ? <Paragraph>{error}</Paragraph> : null}
 
                 <ul>
                     {stockList.map((row, index) => (

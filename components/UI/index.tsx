@@ -1,5 +1,5 @@
 import { darken } from 'polished';
-import styled from 'styled-components';
+import styled, { StyledComponentBase, ThemedStyledInterface } from 'styled-components';
 
 export const Wrapper = styled.div<{
     padding?: number;
@@ -82,6 +82,10 @@ export const Alert = styled.div((props) => ({
     borderRadius: props.theme.borderRadius,
     boxShadow: `0px 1px 2px ${props.theme.colors.error}`,
 }));
+
+export const AlertInfo = styled(Alert)`
+    background: ${(props) => props.theme.colors.secondary};
+`;
 
 export const List = styled.ul``;
 

@@ -4,7 +4,18 @@ import { useState } from 'react';
 import { axiosInstance } from '../../helpers/axios';
 import { ApiResponse } from '../../utils/interfaces/api';
 import { ProducRowResponse, ProductResponse } from './interfaces';
-import { Alert, Button, Form, Input, List, ListElement, Paragraph, Title, Wrapper } from '../../components/UI';
+import {
+    Alert,
+    AlertInfo,
+    Button,
+    Form,
+    Input,
+    List,
+    ListElement,
+    Paragraph,
+    Title,
+    Wrapper,
+} from '../../components/UI';
 
 const Product = () => {
     const [value, setValue] = useState<string>('');
@@ -85,7 +96,7 @@ const Product = () => {
                     </Form>
                 </Wrapper>
 
-                {loading ? <Paragraph>Loading...</Paragraph> : null}
+                {loading ? <AlertInfo>Loading...</AlertInfo> : null}
 
                 {error ? <Alert>{error}</Alert> : null}
 
